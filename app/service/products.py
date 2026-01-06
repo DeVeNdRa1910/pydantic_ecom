@@ -2,7 +2,7 @@ import json
 from typing import List, Dict
 from pathlib import Path
 
-DATA_FILE = Path(__file__).parent.parent/"data"/"dummy.json"
+DATA_FILE = Path(__file__).parent.parent/"data"/"products.json"
 
 def load_products() -> List[Dict]:
     if not DATA_FILE.exists():

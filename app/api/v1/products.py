@@ -3,15 +3,17 @@ from service.products import get_all_products, add_product, remove_product, chan
 from schemas import Product, ProductUpdate
 from uuid import uuid4, UUID
 from datetime import datetime, timezone
+from typing import List, Dict
 
 router = APIRouter()
 
-@router.get("/")
+# response_model -> is basically what(data type) we can expact from the route 
+@router.get("/", response_model=List[Dict])
 def get_all_product():
     return get_all_products()
 
 # /products?name="samsung"
-@router.get("/by-name")
+@router.get("/by-name", response_model=Dict)
 def get_product_by_name(
     name: str = Query(
         default=None, 
@@ -60,7 +62,7 @@ def get_product_by_name(
         "products": products
     }
     
-@router.get("/{product_id}")
+@router.get("/{product_id}", response_model=Dict)
 def get_product_by_id(
     product_id: str = Path(..., 
         min_length=36, 
@@ -85,7 +87,7 @@ def get_product_by_id(
     
     return product
 
-@router.post("/")
+@router.post("/", response_model=Dict)
 def create_product(product: Product):
     # Now Product is the python dictionary object  and we are converting it to the json(java script object notation)
     product_dict = product.model_dump(mode="json")
