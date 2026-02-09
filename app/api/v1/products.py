@@ -1,20 +1,35 @@
-from fastapi import APIRouter, HTTPException, Query, Path
-from service.products import get_all_products, add_product, remove_product, change_product
+from dotenv import load_dotenv
+import os
+from fastapi import APIRouter, HTTPException, Query, Path, Depends
+from fastapi.responses import JSONResponse
+from service.products import get_all_products, add_product, remove_product, change_product, load_products
 from schemas import Product, ProductUpdate
 from uuid import uuid4, UUID
 from datetime import datetime, timezone
 from typing import List, Dict
 
 router = APIRouter()
+load_dotenv()
+
+def get_user():
+    print(os.getenv("BASE_URI"))
+    return {
+        "username": "Devendra Vishwakarma"
+    }
 
 # response_model -> is basically what(data type) we can expact from the route 
 @router.get("/", response_model=List[Dict])
-def get_all_product():
-    return get_all_products()
+def get_all_product(user: dict = Depends(get_user)):
+    print(user)
+    return JSONResponse(
+        status_code=200,
+        content=get_all_product()
+    )
 
 # /products?name="samsung"
 @router.get("/by-name", response_model=Dict)
 def get_product_by_name(
+    dep = Depends(load_products),
     name: str = Query(
         default=None, 
         min_length=1, 
@@ -42,6 +57,7 @@ def get_product_by_name(
     )
 ):
     products = get_all_products()
+    # or products = dep
     
     if name:
         needle = name.strip().lower()
@@ -57,10 +73,13 @@ def get_product_by_name(
         
     products = products[offset: offset+limit]
     
-    return {
-        "total": total,
-        "products": products
-    }
+    return JSONResponse(
+        status_code=200,
+        content={
+            "total": total,
+            "products": products
+        }
+    )
     
 @router.get("/{product_id}", response_model=Dict)
 def get_product_by_id(
