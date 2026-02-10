@@ -2,8 +2,8 @@ from dotenv import load_dotenv
 import os
 from fastapi import APIRouter, HTTPException, Query, Path, Depends
 from fastapi.responses import JSONResponse
-from service.products import get_all_products, add_product, remove_product, change_product, load_products
-from schemas import Product, ProductUpdate
+from app.service.products import get_all_products, add_product, remove_product, change_product, load_products
+from app.schemas import Product, ProductUpdate
 from uuid import uuid4, UUID
 from datetime import datetime, timezone
 from typing import List, Dict
@@ -12,7 +12,6 @@ router = APIRouter()
 load_dotenv()
 
 def get_user():
-    print(os.getenv("BASE_URI"))
     return {
         "username": "Devendra Vishwakarma"
     }

@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request
-from api.v1 import products
+from app.api.v1 import products
 from dotenv import load_dotenv
 import os 
 
